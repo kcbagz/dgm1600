@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>A Wild West Strangity -_- </title>
+    </head>
+    <body>
+        <script>
+        
+            //player object for keeping track of player, their inventory, etc
+            var player = {
+                name: '',
+                quitGame: false,
+                inventory: ['sheriff badge', 'cowboy hat'], //will come across other items, like pistol(before leaving sheriff's office), axe, cross, garlic, etc
+                isInInventory: function(item){
+                    item.toLowerCase();
+                    for(var i = 0; i < this.inventory.length; i++){
+                        //this function will help throughout game to check if the player has certain items in their inventory
+                        if (item === this.inventory[i]){
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+                
+                inventoryCheck: function(){
+                    var iList = 'Your inventory list as requested:\n';
+                    for(var i = 0; i < this.inventory.length; i++){
+                        iList += this.inventory[i] + '\n';
+                    }
+                    alert(iList);
+                }
+
+            }
+
+            function chooseItem(){  //This function will be called when user will choose an item to use from their inventory
+                var valid = false;
+                var whatItem = '';
+                while(valid === false){
+                    whatItem = prompt('What item would you like to use?');
+                    whatItem.toLowerCase();
+                    if(player.isInInventory(whatItem)){
+                        valid = true;
+                        return whatItem;
+                    } else {
+                        alert('You wish you had a(n) ' + whatItem + ', but alas you do not. Let\'s try this again.')
+                    }
+                }
+            }
+
+            function validChoice(choiceMade, validChoices){  //function for making sure the user put in a valid choice
+                var isValid = false;
+                for(var i = 0; i < validChoices.length; i++){
+                    if(choiceMade === validChoices[i]){
+                        isValid = true;
+                    }
+                }
+                return isValid;
+            }
+
+            function displayChoices(choices){
+                var choiceList = 'Your choices here are:\n';
+                for(var i = 0; i < choices.length; i++){
+                    choiceList += choices[i] + '\n';
+                }
+                alert(choiceList)
+                return;
+            }
+
+            
+            function begin(){
+                //this function will run the character through the game intro, set in the sheriff's office, dead bandit location
+                alert('Welcome to the Wild West')
+                alert('You sit in your chair with your feet kicked up on your desk. In one hand you hold your pistol and the other you have your sheriff\'s badge. You thumb over it to give just a little extra polish.')
+                alert('you set your pistol down on the desk and grab your favorite tin of whiskey... It\'s empty.\nJust as you stand up to head out for a refill, a boy comes bursting in through the front door.')
+                alert('Speaking hastily with all the excitement a young man can muster, \"Sheriff ' + player.name + '!\" he starts spewing out a run of sentences. Something about \"bandits\", \"horses gone\" and \"magic\". What is this boy going on about?\nYou manage to calm him down.')
+                alert('The story you gathered is that the Brothers Muertes, a small group of ruthless bandits, was found by the boy out in the hills... dead. They were mutilated, their horses gone and according to some superstition this boy holds, there just has to be some black magic involved. How quaint.')
+                
+                var choices = ['pistol', 'whiskey', 'bandits', 'so be it', 'options', 'quit']
+                var validEntry = false;
+                var userChoice = '';
+                while (validEntry === false){
+                    userChoice = prompt('The boy will take you to inspect the bandit death, what will you do? \nType \"options\" to see what your options are here', 'options');
+                    if(validChoice(userChoice, choices)){
+                        if(userChoice === 'options'){
+                            displayChoices(choices);
+                        } else {
+                            validEntry = true;
+                        }
+                    } else {
+                        alert('Sorry that was not a valid option. Let\'s try this again')
+                    }
+                }
+
+                switch(userChoice.toLowerCase()){
+                    case 'pistol':
+                            player.inventory.push('pistol');
+                            alert('You luckily remembered your pistol was still lying on the table. Showing off to the kid, you make the gun do a few spins around your finger before sliding it back into the holster of your belt')
+                            alert('After letting the young man stare at you in amazement for a bit you head out with the boy following by your side.')
+                            bandits();
+                            break;
+                    case 'whiskey':
+                            player.inventory.push('whiskey')
+                            alert('You grabbed some whiskey for the road and headed out to find the dead bandits location with the boy.')
+                            bandits();
+                            break;
+                    case 'bandits':
+                            alert('You head out to find the location of the dead bandits with the boy.')
+                            bandits();
+                            break;
+                    case 'so be it':
+                            alert('You decide that the death of the bandits is a good thing and there ain\'t no sense in looking into the matter any further')
+                            alert('several hours pass. late afternoon.')
+                            var go = prompt('You hear screams coming from the saloon that don\'t normally come from the saloon. Will you go investigate? Y or N', 'yes');
+                            go.toLowerCase();
+                            if(go === 'yes' || go === 'y'){
+                                backInTown(1, false);
+                            } else {
+                                alert('Unknown to you, your laziness has led to your towns demise. And suddenly everything is quiet. Too quiet...')
+                                alert('Suddenly you hear the quiet sound of a snorting breath coming from outside the front door. Then the sound of a smash as the front door comes down and in the entry stumbles a pig, though something doesn\'t seem right. The pig is covered in blood and stands there almost disfigured, while still retaining it\'s core form. Suddenly the pig lunges toward you and your laziness has left you defenseless. \n\nThe pain as the pig takes a bite from your leg is unbearable. You collapse to the ground as the pig then proceeds to bury it\'s snout into your stomach. More pain. Then you realize... It is eating you. You can\'t do anything other than watch in horror as your intestines are devoured by this pig. Your vision goes blury. Then all you see is darkness. The pain is gone. You are dead. GAME OVER!')
+                            }
+                            break;
+                    case 'quit':
+                            break;
+                }
+            }
+            function bandits(){
+                    alert('You arrive to the bandits location. As soon as you see the horror before you, you send the boy home. This is something you will have to handle on your own')
+                    alert('Ten or more bodies lay scattered at the camp site. Blood everywhere. Their bodies are indeed mutilated. Their skin has been ripped to shreds almost like they had been eaten, but this was not done by any sharp teeth. \n\nYou do notice that the bandits\' horses are missing. But somehow you do not believe that this is the work of some random horse theives.')
+                    var correct = false;
+                    var userChoice;
+                    while (correct === false){
+                        userChoice = prompt('You notice the horses tracks leading to where the bandits rode from and another set of the horses tracks leading away, almost in the direction of the town. Which will you follow? \'to town\' or \'to bandit origin', 'to bandit origin');
+                        userChoice.toLowerCase();
+                        if(userChoice === 'to town'){
+                            correct = true;
+                            backInTown(1, true);
+                            return;
+                        } else if (userChoice === 'to bandit origin'){
+                            correct = true;
+                            banditHideout();
+                            return;
+                        } else {
+                            alert('Sometimes in life you only get 2 choices. This is one of those times. Whatever you typed wasn\'t something we will allow you to do here. Try again.')
+                        }
+                    }
+            }
+            function backInTown(timeOfDay, sawDeadBandits){
+                //this function will run the event for when the player gets back in town. timeOfDay will effect the events in this function
+                if(sawDeadBandits === false){
+                    alert('You missed out on what kind of craziness happened with the bandits, so you do not know if these screams have anything to do with that.')
+                }
+                if(timeOfDay === 1){
+                    var correct = false;
+                    var userChoice;
+                    while (correct === false){
+                        userChoice = prompt('Something something bad stuff something something. The important thing of note is that you see a shadow down the road and you see people running out of the saloon, screaming. They are headed toward Farmer Joe\'s. What do you do? \'follow shadow\' or \'to farm\'', 'to farm');
+                        userChoice.toLowerCase();
+                        if(userChoice === 'follow shadow'){
+                            correct = true;
+                            ending1();
+                            return;
+                        } else if (userChoice === 'to farm'){
+                            correct = true;
+                            ending2();
+                            return;
+                        } else {
+                            alert('Sometimes in life you only get 2 choices. This is one of those times. Whatever you typed wasn\'t something we will allow you to do here. Try again.')
+                        }
+                    }
+                } else {
+                    alert('You hear various noises including screams coming from Farmer Joe\'s area of town.')
+                    ending2();
+                }
+                
+            }
+            function banditHideout(){
+                //function for if the player follows origin of horse tracks
+                alert('You follow the horse tracks for quite some time. when the tracks end, you find yourself at the bandits\' hideout.')
+
+                alert('As you walk in to the front room of the small house, you hear a slow scratching. You take another step forward and the '
+                    + 'scratching intensifies into a flurry of mangling wood. You look down to your right and descover the source... \n\n\n'
+                    + 'Zombie puppies!\n\n\n')
+                var weapon = ' ';
+                var correctInput = 0;
+                while(correctInput == 0) {
+                    weapon = prompt('The zombie puppies frantically claw at wood from the opposite side of a small cage. You do not have the brains to just run out and close the door, so you must prepare yourself and grab a weapon. All you have on you is your \"shoes\", a \"pen\", and a \"lightsaber\". Which will you choose?')
+                    if (weapon == 'shoes' || weapon == 'pen' || weapon == 'lightsaber'){
+                        correctInput = 1;
+                    } else {
+                        alert('You wish you had a\(n\) ' + weapon + ', but alas you do not.')
+                    }
+                }
+                alert('You grab your ' + weapon + ' and take a defensive stance. Just in time, too, as the the zombie puppies burst through an opening in the cage and leap toward you!')
+                var randomNumber = Math.floor(Math.random() * 3);
+                if (randomNumber == 1){
+                    alert('Unfortunately you have no skill with the ' + weapon + '... The puppies all latch on to each of your limbs and start ripping your skin to shreds. You are able to pull them off and kill them with your bare hands, but it is to late. The damage has been done. You were bit and you already feel a fever coming on. YOU LOSE!')
+                    return;
+                } else if (randomNumber == 2) {
+                    alert('You jab the first puppy that gets to you with your ' + weapon + '. It drops motionless to the ground and with a flurry of your own, you go after the rest of the little pups until you are standing in silence, listening to your own heavy breathing. It is over. You killed the cute little things.')
+                    alert('You have no idea what happened or where you even got the light saber from or how you even know what that is. But it is clear you need to head back and follow where the horse tracks lead to.')
+                    backInTown(2, true);
+                    return;
+                } else {
+                    alert('As you tend to do in highly tense situations, you freeze up when you realize you don\'t even know how to use the ' + weapon + ' in a fight. Luckily for you the first pup runs right past you, yapping with a sounds that sounds earily like they are saying \"brains, brains, brains.\" Luckily for you, you don\'t have any brains and the zombie puppies leave you alone. In the zombie apocolypse, having no brains can be beneficial.')
+                    alert('You have no idea what happened or where you even got the light saber from or how you even know what that is. But it is clear you need to head back and follow where the horse tracks lead to.')
+                    backInTown(2, true);
+                    return;
+                }
+                
+            }
+            //function saloon(){
+                //saloon interaction event
+            //}
+            //function followShadow(){
+                //following the shadow event
+            //}
+            //function farmerJoes(){
+                //event at farmer Joe's farm
+            //}
+            function ending1(){
+                //ending option 1, vampire enslavement
+                var userChoice = prompt('You follow the shadow out into the wild. After you walk a ways you see him enter into a cave. You sneak to the entrance of the cave when you hear \"Good Evening!\" coming from behind. You turn to see a man with a curious, long, black cape. He starts to approach you. What do you do? \'pistol\', \'fists\' or \'run\'', 'run');
+
+                switch(userChoice.toLowerCase()){
+                    case 'pistol':
+                            if(player.isInInventory('pistol')){
+                                alert('You quickly whip out your pistol and start blasting away. The man does not even flinch. He laughs as he says, \"It appears you did not come ready to face me.\" And next thing you know he is standing right next to you and you black out.')
+                            } else {
+                                alert('You reach down to an empty weapon holster. You seem to remember leaving your pistol back at the sheriff\'s building on your desk. The man laughs as he says, \"It appears you did not come ready to face me.\" And next thing you know he is standing right next to you and you black out.')
+                            }
+                            break;
+                    case 'fists':
+                            alert('You charge the man back and start wildly swinging your fists. The man does not seem to be phased. He laughs as he says, \"It appears you did not come ready to face me.\" And next thing you know he is standing right next to you and you black out.')
+                            break;
+                    case 'run':
+                            alert('You run... straight into the cave. If only you had though this through. The next thing you know the man is standing right next to you and you black out.')
+                            break;
+                    default:
+                            alert('you stand there frozen. The man laughs as he says, \"It appears you did not come ready to face me.\" And next thing you know he is standing right next to you and you black out.')
+                            break;
+                }
+                alert('You start coming to and realize you are tied down. You look in horror at several tubes emerging from your body, siphoning blood. The man stands before you with a smile. A big smile with sharp teeth. Was he the one responsible for all the chaos? You don\'t know and perhaps will never know. Those are your thoughts as you pass out again.')
+                alert('You wake up again. You still have tubes emerging from your body. You try to move but find you have no strength. You feel yourself slipping back into unconciousness. Your mind is racing as you realize you may be enslaved to this forever... \n\nTHE END\n\n')
+                return;
+            }
+            function ending2(){
+                //ending two event. expedition with the remaining survivors
+                alert('When you get to Farmer Joe\'s you see the most bizarre scene. People have locked themselves into the barn and bloodied and distorted animals are running rampant in circles. They must be infected by some strange disease. Some are eating other animals and some are eating humans. Suddenly poof! Magic the boys spoke of earlier, happens. You save the people from the barn and find yourself on an expedition out of town, looking for a place to make a new settlement. Your party never looks back. Instead, choosing to forget the horrors you left behind.\n\n\nTHE END\n\n')
+            }
+
+            player.inventoryCheck();
+
+            alert('Adventure Time! The Wild West Strangity -_-')
+            player.name = prompt('What will you be called?', 'Wild Bill');
+            var gameStart = confirm(player.name + ', are you ready to enter the wild horrors of the old west?')
+
+            if(gameStart){
+                begin();
+            } else {
+                alert('As it turns out, you don\'t have what it takes to survive in the Wild West! Come back again when you have found some courage and are ready to sheriff a soon to be ghost town!')
+                //endGame();
+            }
+            alert('Thanks for playing!')
+
+        </script>
+    </body>
+</html>
